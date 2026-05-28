@@ -3,6 +3,13 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import axios from "axios";
 
+import {
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+} from "firebase/auth";
+
+import { auth } from "@/lib/firebase";
+
 export default function ContactForm() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -15,21 +22,80 @@ export default function ContactForm() {
   const [product, setProduct] = useState("");
   const [message, setMessage] = useState("");
 
+  // OTP STATES
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [confirmationResult, setConfirmationResult] = useState(null);
+
+  // AUTO OPEN POPUP
   useEffect(() => {
-    const timer = setTimeout(() => setIsOpen(true), 2000);
+    const timer = setTimeout(() => {
+      setIsOpen(true);
+    }, 2000);
+
     return () => clearTimeout(timer);
   }, []);
 
-  if (!isOpen) return null;
+  // FIREBASE RECAPTCHA
+  useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      !window.recaptchaVerifier
+    ) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+        }
+      );
 
-  const handleClose = () => setIsOpen(false);
+      window.recaptchaVerifier.render();
+    }
+  }, []);
+
+  const handleClose = () => {
+    setIsOpen(false);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setStatus("Sending...");
 
+    // SEND OTP
+    if (!otpSent) {
+      try {
+        setLoading(true);
+        setStatus("");
+
+        const appVerifier = window.recaptchaVerifier;
+
+        const result = await signInWithPhoneNumber(
+          auth,
+          `+91${phone}`,
+          appVerifier
+        );
+
+        setConfirmationResult(result);
+        setOtpSent(true);
+
+        setStatus("OTP sent successfully");
+      } catch (error) {
+        console.log(error);
+        setStatus("Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+
+      return;
+    }
+
+    // VERIFY OTP + SUBMIT FORM
     try {
+      setLoading(true);
+      setStatus("");
+
+      await confirmationResult.confirm(otp);
+
       const formData = {
         platform: "Titanium Dioxide Wholesaler Popup Form",
         platformEmail: "sales@aanyaenterprise.com",
@@ -65,25 +131,30 @@ Contact: ${phone}`;
           window.open(waUrl, "_blank");
         }, 1000);
 
+        // RESET FORM
         setName("");
         setPhone("");
         setEmail("");
         setProduct("");
         setMessage("");
+        setOtp("");
+        setOtpSent(false);
 
         setTimeout(() => {
           setIsOpen(false);
         }, 3000);
       } else {
-        setStatus("❌ Failed to send. Please try again.");
+        setStatus("Something went wrong");
       }
     } catch (error) {
-      console.error(error);
-      setStatus("❌ Server error. Try again later.");
+      console.log(error);
+      setStatus("Invalid OTP");
     } finally {
       setLoading(false);
     }
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-100 backdrop-blur-sm p-4">
@@ -109,6 +180,7 @@ Contact: ${phone}`;
           <h2 className="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-2">
             Get In Touch With Us
           </h2>
+
           <div className="w-20 h-[3px] bg-[#F7C600] mx-auto mb-6 rounded-full"></div>
 
           <form className="space-y-4" onSubmit={handleSubmit}>
@@ -122,6 +194,7 @@ Contact: ${phone}`;
                 onChange={(e) => setName(e.target.value)}
                 disabled={loading}
               />
+
               <select
                 className="flex-1 p-3 rounded-lg text-black text-sm border border-gray-300 focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-white/90 shadow-sm transition"
                 required
@@ -130,12 +203,24 @@ Contact: ${phone}`;
                 disabled={loading}
               >
                 <option value="">Select Product</option>
-                <option value="Titanium Dioxide (TiO₂)">Titanium Dioxide (TiO₂)</option>
-                <option value="Titanium Dioxide Rutile">Titanium Dioxide Rutile</option>
-                <option value="Lithopone">Lithopone</option>
-                <option value="Optical Brighter">Optical Brighter</option>
-                <option value="Caustic Soda">Caustic Soda</option>
-                <option value="Calcium Carbonate">Calcium Carbonate</option>
+                <option value="Titanium Dioxide (TiO₂)">
+                  Titanium Dioxide (TiO₂)
+                </option>
+                <option value="Titanium Dioxide Rutile">
+                  Titanium Dioxide Rutile
+                </option>
+                <option value="Lithopone">
+                  Lithopone
+                </option>
+                <option value="Optical Brighter">
+                  Optical Brighter
+                </option>
+                <option value="Caustic Soda">
+                  Caustic Soda
+                </option>
+                <option value="Calcium Carbonate">
+                  Calcium Carbonate
+                </option>
               </select>
             </div>
 
@@ -171,21 +256,46 @@ Contact: ${phone}`;
               disabled={loading}
             ></textarea>
 
+            {/* OTP FIELD */}
+            {otpSent && (
+              <input
+                type="text"
+                placeholder="Enter OTP"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                className="w-full p-3 rounded-lg text-black text-sm border border-gray-300 focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-white/90 shadow-sm transition"
+                required
+                disabled={loading}
+              />
+            )}
+
             <button
               type="submit"
               disabled={loading}
               className="w-full py-3 bg-gradient-to-r from-[#F7C600] to-[#F7A400] hover:opacity-90 transition rounded-lg font-semibold text-white text-sm shadow-lg"
             >
-              {loading ? "Submitting..." : "Send Message"}
+              {loading
+                ? "Processing..."
+                : otpSent
+                ? "Verify OTP"
+                : "Send Message"}
             </button>
 
             {status && (
-              <p className={`text-center text-sm mt-2 font-medium ${
-                status.startsWith("✅") ? "text-green-600" : "text-red-600"
-              }`}>
+              <p
+                className={`text-center text-sm mt-2 font-medium ${
+                  status.includes("successfully") ||
+                  status.includes("OTP sent")
+                    ? "text-green-600"
+                    : "text-red-600"
+                }`}
+              >
                 {status}
               </p>
             )}
+
+            {/* FIREBASE RECAPTCHA */}
+            <div id="recaptcha-container"></div>
           </form>
         </div>
       </div>

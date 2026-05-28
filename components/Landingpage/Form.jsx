@@ -1,48 +1,125 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import axios from "axios";
+
+import {
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+} from "firebase/auth";
+
+import { auth } from "@/lib/firebase";
 
 const EnquiryForm = () => {
   const [submitted, setSubmitted] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // OTP STATES
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [confirmationResult, setConfirmationResult] = useState(null);
+
+  // FORM STATES
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [product, setProduct] = useState("");
+  const [message, setMessage] = useState("");
+  const [place, setPlace] = useState("");
+
+  // FIREBASE RECAPTCHA
+  useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      !window.recaptchaVerifier
+    ) {
+      try {
+        window.recaptchaVerifier = new RecaptchaVerifier(
+          auth,
+          "recaptcha-container",
+          {
+            size: "invisible",
+          }
+        );
+
+        window.recaptchaVerifier.render();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const form = e.target;
 
-    const name = form.name.value;
-    const phone = form.phone.value;
-    const email = form.email.value;
-    const product = form.products.value;
-    const message = form.message.value;
-    const place = form.place.value;
+    // SEND OTP
+    if (!otpSent) {
+      try {
+        if (phone.length !== 10) {
+          return setSuccessMessage("Invalid phone number");
+        }
 
-    setLoading(true);
-    setSuccessMessage("Sending...");
+        setLoading(true);
+        setSuccessMessage("");
 
+        const appVerifier = window.recaptchaVerifier;
+
+        const result = await signInWithPhoneNumber(
+          auth,
+          `+91${phone}`,
+          appVerifier
+        );
+
+        setConfirmationResult(result);
+        setOtpSent(true);
+
+        setSuccessMessage("OTP sent successfully");
+      } catch (error) {
+        console.log(error);
+        setSuccessMessage("Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+
+      return;
+    }
+
+    // VERIFY OTP + SUBMIT FORM
     try {
-      const { data } = await axios.post("https://brandbnalo.com/api/form/add", {
-        platform: "Titanium wholesaler city page Enquiry Form",
-        platformEmail: "sales@aanyaenterprise.com",
-        name,
-        phone,
-        email,
-        place,
-        product,
-        message,
-      });
+      setLoading(true);
+      setSuccessMessage("");
+
+      await confirmationResult.confirm(otp);
+
+      const { data } = await axios.post(
+        "https://brandbnalo.com/api/form/add",
+        {
+          platform: "Titanium wholesaler city page Enquiry Form",
+          platformEmail: "sales@aanyaenterprise.com",
+          name,
+          phone,
+          email,
+          place,
+          product,
+          message,
+        }
+      );
 
       if (data?.success) {
         setSubmitted(true);
-        setSuccessMessage("✅ Your enquiry has been submitted successfully!");
+
+        setSuccessMessage(
+          "✅ Your enquiry has been submitted successfully!"
+        );
 
         const whatsappText = `Hi, I am ${name}.
 Email: ${email}
 Product: ${product}
 Place: ${place}
+
 Message: ${message}
+
 Contact: ${phone}`;
 
         setTimeout(() => {
@@ -54,13 +131,21 @@ Contact: ${phone}`;
           );
         }, 1000);
 
-        form.reset();
+        // RESET
+        setName("");
+        setPhone("");
+        setEmail("");
+        setProduct("");
+        setMessage("");
+        setPlace("");
+        setOtp("");
+        setOtpSent(false);
       } else {
-        setSuccessMessage("❌ Failed to send. Please try again.");
+        setSuccessMessage("Something went wrong");
       }
     } catch (error) {
-      console.error(error);
-      setSuccessMessage("❌ Server error. Try again later.");
+      console.log(error);
+      setSuccessMessage("Invalid OTP");
     } finally {
       setLoading(false);
     }
@@ -80,8 +165,17 @@ Contact: ${phone}`;
         </h2>
 
         <p className="text-black text-lg leading-relaxed mb-6">
-          At <span className="font-semibold text-yellow-500">Aanya Enterprise</span>, we believe that the foundation of a trusted Titanium Dioxide wholesaler lies in
-          <span className="font-semibold"> uncompromised quality</span>.
+          At{" "}
+          <span className="font-semibold text-yellow-500">
+            Aanya Enterprise
+          </span>
+          , we believe that the foundation of a trusted Titanium
+          Dioxide wholesaler lies in
+          <span className="font-semibold">
+            {" "}
+            uncompromised quality
+          </span>
+          .
         </p>
       </div>
 
@@ -106,35 +200,54 @@ Contact: ${phone}`;
               Quick Enquiry
             </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-5" method="POST">
-              <input type="hidden" name="_captcha" value="false" />
-              <input type="hidden" name="_subject" value="New Product Enquiry" />
-              <input type="hidden" name="_template" value="table" />
-              <input type="hidden" name="_nosponsor" value="false" />
-              <input type="hidden" name="_cc" value="inquiry.promozione@gmail.com" />
-
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-5"
+              method="POST"
+            >
               {/* Row 1 */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <select
-                  name="products"
+                  value={product}
+                  onChange={(e) => setProduct(e.target.value)}
                   className="p-3 rounded-md w-full bg-white/95 text-gray-800 outline-none border border-gray-300 focus:ring-2 focus:ring-[#F7C600]"
                   defaultValue=""
+                  required
                 >
                   <option value="" disabled>
                     Select Product
                   </option>
-                  <option value="Titanium Dioxide (TiO₂)">Titanium Dioxide (TiO₂)</option>
-                  <option value="Titanium Dioxide Rutile">Titanium Dioxide Rutile</option>
-                  <option value="Lithopone">Lithopone</option>
-                  <option value="Optical Brighter">Optical Brighter</option>
-                  <option value="Caustic Soda">Caustic Soda</option>
-                  <option value="Calcium Carbonate">Calcium Carbonate</option>
+
+                  <option value="Titanium Dioxide (TiO₂)">
+                    Titanium Dioxide (TiO₂)
+                  </option>
+
+                  <option value="Titanium Dioxide Rutile">
+                    Titanium Dioxide Rutile
+                  </option>
+
+                  <option value="Lithopone">
+                    Lithopone
+                  </option>
+
+                  <option value="Optical Brighter">
+                    Optical Brighter
+                  </option>
+
+                  <option value="Caustic Soda">
+                    Caustic Soda
+                  </option>
+
+                  <option value="Calcium Carbonate">
+                    Calcium Carbonate
+                  </option>
                 </select>
 
                 <input
                   type="text"
-                  name="name"
                   placeholder="Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="p-3 rounded-md w-full bg-white/95 text-gray-800 outline-none border border-gray-300 focus:ring-2 focus:ring-[#F7C600]"
                   required
                 />
@@ -144,20 +257,28 @@ Contact: ${phone}`;
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex items-center border border-gray-300 rounded-md bg-white/95 focus-within:ring-2 focus-within:ring-[#F7C600]">
                   <span className="px-2">🇮🇳</span>
+
                   <input
                     type="tel"
-                    name="phone"
                     maxLength={10}
                     minLength={10}
                     placeholder="081234 56789"
+                    value={phone}
+                    onChange={(e) =>
+                      setPhone(
+                        e.target.value.replace(/\D/g, "")
+                      )
+                    }
                     className="p-3 flex-1 rounded-md outline-none bg-transparent"
                     required
                   />
                 </div>
+
                 <input
                   type="email"
-                  name="email"
                   placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="p-3 rounded-md w-full bg-white/95 text-gray-800 outline-none border border-gray-300 focus:ring-2 focus:ring-[#F7C600]"
                   required
                 />
@@ -165,32 +286,56 @@ Contact: ${phone}`;
 
               <input
                 type="text"
-                name="place"
                 placeholder="Place"
+                value={place}
+                onChange={(e) => setPlace(e.target.value)}
                 className="p-3 rounded-md w-full bg-white/95 text-gray-800 outline-none border border-gray-300 focus:ring-2 focus:ring-[#F7C600]"
                 required
               />
 
               <textarea
-                name="message"
                 placeholder="Message"
                 rows="4"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
                 className="p-3 rounded-md w-full bg-white/95 text-gray-800 outline-none border border-gray-300 focus:ring-2 focus:ring-[#F7C600]"
                 required
               ></textarea>
 
+              {/* OTP FIELD BELOW TEXTAREA */}
+              {otpSent && (
+                <input
+                  type="text"
+                  placeholder="Enter OTP"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  className="p-3 rounded-md w-full bg-white/95 text-gray-800 outline-none border border-gray-300 focus:ring-2 focus:ring-[#F7C600]"
+                  required
+                />
+              )}
+
+              {/* SINGLE BUTTON */}
               <button
                 type="submit"
                 disabled={loading}
                 className="w-full py-3 bg-yellow-500 hover:bg-yellow-600 text-white rounded-sm font-medium transition"
               >
-                {loading ? "Sending..." : "Send Enquiry"}
+                {loading
+                  ? "Processing..."
+                  : otpSent
+                  ? "Verify OTP"
+                  : "Send Enquiry"}
               </button>
-            </form>
 
-            {successMessage && (
-              <p className="text-center text-white mt-4">{successMessage}</p>
-            )}
+              {successMessage && (
+                <p className="text-center text-white mt-4">
+                  {successMessage}
+                </p>
+              )}
+
+              {/* FIREBASE RECAPTCHA */}
+              <div id="recaptcha-container"></div>
+            </form>
           </div>
         </div>
       </div>

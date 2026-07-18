@@ -20,9 +20,9 @@ export default function ContactForm() {
   const [message, setMessage] = useState("");
 
   // OTP STATES
-  const [otpSent, setOtpSent] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [confirmationResult, setConfirmationResult] = useState(null);
+  // const [otpSent, setOtpSent] = useState(false);
+  // const [otp, setOtp] = useState("");
+  // const [confirmationResult, setConfirmationResult] = useState(null);
 
   // AUTO OPEN POPUP
   useEffect(() => {
@@ -34,19 +34,19 @@ export default function ContactForm() {
   }, []);
 
   // FIREBASE RECAPTCHA
-  useEffect(() => {
-    if (typeof window !== "undefined" && !window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier(
-        auth,
-        "recaptcha-container",
-        {
-          size: "invisible",
-        },
-      );
+  // useEffect(() => {
+  //   if (typeof window !== "undefined" && !window.recaptchaVerifier) {
+  //     window.recaptchaVerifier = new RecaptchaVerifier(
+  //       auth,
+  //       "recaptcha-container",
+  //       {
+  //         size: "invisible",
+  //       },
+  //     );
 
-      window.recaptchaVerifier.render();
-    }
-  }, []);
+  //     window.recaptchaVerifier.render();
+  //   }
+  // }, []);
 
   const handleClose = () => {
     setIsOpen(false);
@@ -56,39 +56,39 @@ export default function ContactForm() {
     e.preventDefault();
 
     // SEND OTP
-    if (!otpSent) {
-      try {
-        setLoading(true);
-        setStatus("");
+    // if (!otpSent) {
+    //   try {
+    //     setLoading(true);
+    //     setStatus("");
 
-        const appVerifier = window.recaptchaVerifier;
+    //     const appVerifier = window.recaptchaVerifier;
 
-        const result = await signInWithPhoneNumber(
-          auth,
-          `+91${phone}`,
-          appVerifier,
-        );
+    //     const result = await signInWithPhoneNumber(
+    //       auth,
+    //       `+91${phone}`,
+    //       appVerifier,
+    //     );
 
-        setConfirmationResult(result);
-        setOtpSent(true);
+    //     setConfirmationResult(result);
+    //     setOtpSent(true);
 
-        setStatus("OTP sent successfully");
-      } catch (error) {
-        console.log(error);
-        setStatus("Something went wrong");
-      } finally {
-        setLoading(false);
-      }
+    //     setStatus("OTP sent successfully");
+    //   } catch (error) {
+    //     console.log(error);
+    //     setStatus("Something went wrong");
+    //   } finally {
+    //     setLoading(false);
+    //   }
 
-      return;
-    }
+    //   return;
+    // }
 
     // VERIFY OTP + SUBMIT FORM
     try {
       setLoading(true);
       setStatus("");
 
-      await confirmationResult.confirm(otp);
+      // await confirmationResult.confirm(otp);
 
       const formData = {
         platform: "Titanium Dioxide Wholesaler Popup Form",
@@ -131,8 +131,8 @@ Contact: ${phone}`;
         setEmail("");
         setProduct("");
         setMessage("");
-        setOtp("");
-        setOtpSent(false);
+        // setOtp("");
+        // setOtpSent(false);
 
         setTimeout(() => {
           setIsOpen(false);
@@ -142,7 +142,7 @@ Contact: ${phone}`;
       }
     } catch (error) {
       console.log(error);
-      setStatus("Invalid OTP");
+      setStatus("Faild to Submit");
     } finally {
       setLoading(false);
     }
@@ -242,17 +242,7 @@ Contact: ${phone}`;
             ></textarea>
 
             {/* OTP FIELD */}
-            {otpSent && (
-              <input
-                type="text"
-                placeholder="Enter OTP"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                className="w-full p-3 rounded-lg text-black text-sm border border-gray-300 focus:ring-2 focus:ring-yellow-400 focus:outline-none bg-white/90 shadow-sm transition"
-                required
-                disabled={loading}
-              />
-            )}
+           
 
             <button
               type="submit"
@@ -261,8 +251,6 @@ Contact: ${phone}`;
             >
               {loading
                 ? "Processing..."
-                : otpSent
-                  ? "Verify OTP"
                   : "Send Message"}
             </button>
 
@@ -279,7 +267,6 @@ Contact: ${phone}`;
             )}
 
             {/* FIREBASE RECAPTCHA */}
-            <div id="recaptcha-container"></div>
           </form>
         </div>
       </div>

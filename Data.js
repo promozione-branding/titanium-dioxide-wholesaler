@@ -3896,6 +3896,109 @@ export const categories = [
     },
   ],
 },
+{
+  id: "titanium-dioxide-rutile-fr-761",
+  name: "Titanium Dioxide Rutile FR-761",
+  metaTitle: "Titanium Dioxide Rutile FR-761 wholesaler | Aanya Enterprises",
+  metaDescription:
+    "Aanya Enterprises is a trusted wholesaler of Titanium Dioxide Rutile FR-761 in India. Our premium TiO₂ FR-761 offers excellent opacity, brightness, weather resistance, and dispersion for paints, coatings, plastics, inks, paper, and industrial applications.",
+
+  description: [
+    {
+      type: "h2",
+      text: "Titanium Dioxide Rutile FR-761 | Aanya Enterprises",
+    },
+    {
+      type: "p",
+      text: "Aanya Enterprise is a trusted wholesaler of Titanium Dioxide, offering premium Titanium Dioxide Rutile FR-761 from the renowned Fangyuan Titanium Industry. Produced using the sulfuric acid process, this high-grade plastic-purpose rutile titanium dioxide features advanced inorganic and organic surface treatment, delivering excellent whiteness, a blue undertone, low oil absorption, superior dispersibility, and outstanding compatibility with plastic resin systems.",
+    },
+    {
+      type: "h2",
+      text: "Key Features – Titanium Dioxide Rutile FR-761",
+    },
+    {
+      type: "ul",
+      items:  [
+  "High Whiteness & Blue Undertone – We wholesale Titanium Dioxide with fine and uniformly distributed particles that provide excellent whiteness and a clean blue undertone.",
+  "Excellent Dispersibility – Our wholesale Titanium Dioxide features advanced inorganic and organic surface treatments for smooth and uniform dispersion in various plastic systems.",
+  "Low Oil Absorption – We offer wholesale Titanium Dioxide with low oil absorption for excellent compatibility with plastic resins and improved processing fluidity.",
+  "High Tinting & Covering Power – Our wholesale-grade Titanium Dioxide delivers strong coloring strength and excellent opacity through controlled particle size distribution.",
+  "Good Processing Performance – As a trusted Titanium Dioxide wholesaler, we provide products designed for excellent rheology and compatibility during plastic processing.",
+  "Strong Heat & Weather Resistance – We wholesale Titanium Dioxide that helps reduce yellowing and ensures stable performance during high-temperature processing."
+],
+    },
+  ],
+
+  specs: [
+    { label: "Usage/Application", value: "Industrial" },
+    { label: "Form", value: "Powder" },
+    { label: "Packaging Size", value: "25 kg" },
+    { label: "Grade", value: "FR-761" },
+    { label: "Purity", value: "≥99%" },
+    { label: "Country of Origin", value: "China" },
+  ],
+
+  image: [
+    {
+      src: "/fr761.webp",
+      alt: "Titanium Dioxide Rutile FR-761",
+    },
+  ],
+},
+{
+  id: "titanium-dioxide-rutile-fr-767+",
+  name: "Titanium Dioxide Rutile FR-767+",
+  metaTitle: "Titanium Dioxide Rutile FR-767+ wholesaler | Aanya Enterprises",
+  metaDescription:
+    "Buy premium Titanium Dioxide Rutile FR-767+ from Aanya Enterprises. We are a trusted wholesaler in India offering high-quality TiO₂ Rutile FR-767+ for paints, coatings, plastics, inks, rubber, and industrial applications.",
+
+  description: [
+    {
+      type: "h2",
+      text: "Titanium Dioxide Rutile FR-761 | Aanya Enterprises",
+    },
+    {
+      type: "p",
+      text: "Aanya Enterprise is a trusted wholesaler of Titanium Dioxide, offering premium Rutile Titanium Dioxide FR-767+ from the renowned Fangyuan Titanium Industry. Produced using the sulfuric acid process, this grade features advanced inorganic (zirconium-aluminum) coating and organic surface treatment, ensuring superior performance, stability, and durability across a wide range of industrial applications.",
+    },
+    {
+      type: "h2",
+      text: "Key Features – Titanium Dioxide Rutile FR-767+",
+    },
+    {
+      type: "ul",
+      items: [
+  "Advanced Zirconium-Aluminum Surface Treatment – We wholesale Rutile Titanium Dioxide FR-767+ with advanced inorganic (zirconium-aluminum) coating and organic surface treatment for enhanced performance and stability.",
+  "Excellent Whiteness & Brightness – Our wholesale Titanium Dioxide delivers outstanding whiteness, brightness, and a consistent finish across various industrial applications.",
+  "Superior Dispersibility – We offer wholesale Rutile Titanium Dioxide that disperses smoothly and uniformly in coatings, plastics, inks, and other formulations.",
+  "High Tinting Strength & Opacity – Controlled particle size distribution provides excellent hiding power, strong tinting strength, and superior coverage.",
+  "Excellent Weather & Heat Resistance – As a trusted Titanium Dioxide wholesaler, we supply products that resist yellowing and maintain long-term durability under harsh environmental conditions.",
+  "Wide Industrial Compatibility – Our wholesale Rutile Titanium Dioxide FR-767+ is designed for excellent compatibility with coatings, plastics, inks, paper, and other industrial systems."
+]
+    },
+  ],
+
+  specs: [
+    { label: "Mass fraction of TiO2/%", value: "93" },
+    { label: "Form", value: "Powder" },
+    { label: "Packaging Size", value: "25 kg" },
+    { label: "Rutile content ", value: "98%" },
+    { label: "Grade", value: "FR-761" },
+    { label: "Purity", value: "≥99%" },
+    { label: "Rutile content /%", value: "98%" },
+    { label: "Country of Origin", value: "China" },
+    { label: "PH value of aqueous suspension", value: "6.5 ~ 8.5" },
+    { label: "Color (b*)", value: "2.40" },
+    { label: "Color (L*)", value: "98.20" },
+  ],
+
+  image: [
+    {
+      src: "/fr767.webp",
+      alt: "Titanium Dioxide Rutile FR-767+",
+    },
+  ],
+},
 
    
     

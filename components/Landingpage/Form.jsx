@@ -97,6 +97,7 @@ const EnquiryForm = () => {
         {
           platform: "Titanium wholesaler city page Enquiry Form",
           platformEmail: "sales@aanyaenterprise.com",
+           supplierToken: "6a19599b79a7cd6dff26a4c5",
           name,
           phone,
           email,

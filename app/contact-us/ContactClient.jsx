@@ -10,6 +10,7 @@ import {
 } from "firebase/auth";
 
 import { auth } from "@/lib/firebase";
+import { handleCallClick } from "@/lib/tracking";
 
 const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
@@ -365,6 +366,7 @@ Contact: ${phone}`;
 
                   <a
                     href="tel:+918527557778"
+                    onClick={() => handleCallClick()}
                     className="text-black text-sm sm:text-base md:text-lg leading-snug"
                   >
                     +91-85275 57778
@@ -372,6 +374,7 @@ Contact: ${phone}`;
                   ,{" "}
                   <a
                     href="tel:+918920109583"
+                    onClick={() => handleCallClick()}
                     className="text-black text-sm sm:text-base md:text-lg leading-snug"
                   >
                     +91-89201 09583

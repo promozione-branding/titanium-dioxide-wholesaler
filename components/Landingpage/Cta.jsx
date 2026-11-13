@@ -1,4 +1,6 @@
+"use client";
 import React from "react";
+import { handleCallClick } from "@/lib/tracking";
 
 const Cta = () => {
   return (
@@ -19,6 +21,7 @@ const Cta = () => {
 
         <a
           href="tel:+918527557778"
+          onClick={() => handleCallClick()}
           className="inline-block bg-[#F7C600] text-black font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-yellow-500 transition duration-300"
         >
           Contact Now

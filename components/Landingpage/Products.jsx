@@ -4,6 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 
 import { FaWhatsapp } from "react-icons/fa";
 import Link from "next/link";
+import { handleWhatsappClick } from "@/lib/tracking";
 const services = [
   {
     title: "Titanium Dioxide Rutile FR-761",
@@ -106,7 +107,10 @@ export default function ServicesGrid() {
                 <a
                   href={`https://wa.me/+918527557778?text=Hi, I'm interested in ${service.title}`}
                   target="_blank"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleWhatsappClick({ obj: { name: service.title } });
+                  }}
                   className="mt-2 inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm md:text-lg px-3 py-1.5 rounded-full shadow-md transition-all duration-300 opacity-1000"
                 >
                   <FaWhatsapp className="text-md" />

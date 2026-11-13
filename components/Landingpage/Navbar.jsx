@@ -6,6 +6,7 @@ import { FaWhatsapp } from "react-icons/fa";
 import Link from "next/link";
 import { categories } from "@/Data";
 import Enquiry from "@/components/Enquiry"
+import { handleCallClick, handleWhatsappClick } from "@/lib/tracking";
 
 export default function Navbar() {
   const [openMenu, setOpenMenu] = useState(null);
@@ -71,11 +72,11 @@ export default function Navbar() {
             </div>
             <div className="flex items-center gap-2 border-l pl-4">
               <Phone size={16} />
-              <a href="tel:+9185275205777">+91-85275 57778</a>
+              <a href="tel:+9185275205777" onClick={() => handleCallClick()}>+91-85275 57778</a>
             </div>
             <div className="flex items-center gap-2 border-l pl-4">
               <Phone size={16} />
-              <a href="tel:+918920109583">+91-89201 09583</a>
+              <a href="tel:+918920109583" onClick={() => handleCallClick()}>+91-89201 09583</a>
             </div>
           </div>
 
@@ -95,6 +96,7 @@ export default function Navbar() {
             </a> */}
             <a
               href="tel:+918527557778"
+              onClick={() => handleCallClick()}
               className="flex font-serif items-center gap-1 text-xs"
             >
               <Phone size={14} /> <span>+918527557778</span>
@@ -187,6 +189,7 @@ export default function Navbar() {
               href="https://wa.me/918527557778?text=Hello!%20I%20would%20like%20to%20know%20more%20about%20your%20products."
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => handleWhatsappClick()}
               className="relative inline-flex items-center gap-2 px-6 py-3 font-semibold bg-[#25D366] text-white cursor-pointer transition-all duration-700 before:content-[''] before:absolute before:inset-0 before:border before:border-[#25D366] before:transition-transform before:duration-500 before:ease-in-out before:translate-y-2 before:translate-x-2 hover:before:-translate-y-1 hover:before:-translate-x-2 hover:shadow-lg hover:bg-[#20ba5a] "
             >
               <FaWhatsapp size={20} className="text-white" />

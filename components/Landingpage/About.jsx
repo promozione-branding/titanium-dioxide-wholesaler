@@ -1,3 +1,4 @@
+"use client";
 import {
   FaGlobeAmericas,
   FaHandshake,
@@ -9,6 +10,7 @@ import {
 import Image from "next/image";
 import Ti from "@/components/Animations/Ti";
 import Link from "next/link";
+import { handleCallClick } from "@/lib/tracking";
 
 export default function AboutUs() {
  const features = [
@@ -130,6 +132,7 @@ export default function AboutUs() {
                 <p className="text-gray-700">Call 24/7</p>
 
                 <a href="tel:+9185275205777"
+                onClick={() => handleCallClick()}
                 className="font-bold underline text-[#00537B] text-base sm:text-lg">
                   +91 85275205777
                 </a>

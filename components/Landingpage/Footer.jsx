@@ -12,6 +12,7 @@ import {
   Linkedin,
 } from "lucide-react";
 import { useState } from "react";
+import { handleCallClick } from "@/lib/tracking";
 
 const products = [
   { name: "Titanium Dioxide (TiO₂)", href: "/categories/titanium-dioxide-tiO2" },
@@ -113,11 +114,11 @@ const Footer = () => {
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Phone className="w-5 h-5 text-[#F7C600]" />
-                <a href="tel:+918527557778" className="text-white underline">+91-85275 57778</a>
+                <a href="tel:+918527557778" onClick={() => handleCallClick()} className="text-white underline">+91-85275 57778</a>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-5 h-5 text-[#F7C600]" />
-                <a href="tel:+918920109583" className="text-white underline">+91-89201 09583</a>
+                <a href="tel:+918920109583" onClick={() => handleCallClick()} className="text-white underline">+91-89201 09583</a>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-5 h-5 text-[#F7C600]" />

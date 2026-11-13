@@ -7,6 +7,7 @@ import Enquiry from "@/components/Enquiry";
 import { ArrowUpRight } from "lucide-react";
 
 import axios from "axios";
+import { handleWhatsappClick } from "@/lib/tracking";
 
 export default function ProductPage({ params }) {
   const { productId } = React.use(params);
@@ -109,6 +110,7 @@ const [loading, setLoading] = useState(false);
                 )} , Please provide more details on this`}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => handleWhatsappClick({ obj: product })}
                 className="flex-1 text-center px-4 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg shadow hover:from-green-600 hover:to-green-700 transition font-semibold"
               >
                 WhatsApp Now
